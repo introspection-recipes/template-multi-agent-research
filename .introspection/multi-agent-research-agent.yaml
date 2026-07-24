@@ -1,5 +1,4 @@
 name: multi-agent-research-agent
-runtime_name: multi-agent-research-agent
 path: .
 description: Anthropic-style multi-agent research system (orchestrator-worker) as a Pi recipe
 runtime:
