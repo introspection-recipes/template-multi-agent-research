@@ -1,6 +1,6 @@
-# multi-agent-research Recipe
+# Multi-Agent Research Template
 
-An Introspection (Pi) recipe that reproduces **Anthropic's multi-agent research system** — the orchestrator-worker architecture from [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system) — as a runnable Pi agent.
+A starter template inspired by Anthropic's multi-agent research system.
 
 A **lead researcher** (Opus) analyzes a question, decomposes it into independent slices, and dispatches **research subagents** (Sonnet) that search the web in parallel. The lead synthesizes their findings, then a **citation agent** attaches precise sources before the answer is returned. It follows the same recipe layout as the `pi-claude-recipe` and `nextplay-recipe` examples.
 
