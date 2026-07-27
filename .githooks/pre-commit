@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 set -eu
 
-npx -y -p @introspection-ai/pi-recipes@latest recipes check . --profile ci
+npx -y -p @introspection-ai/cli introspection check
