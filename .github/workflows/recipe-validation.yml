@@ -14,4 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: introspection-org/pi-recipes-action@v0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: introspection check
+        run: npx -y -p @introspection-ai/cli introspection check

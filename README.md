@@ -1,94 +1,42 @@
-# multi-agent-research Recipe
+# Multi-agent research
 
-An Introspection (Pi) recipe that reproduces **Anthropic's multi-agent research system** — the orchestrator-worker architecture from [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system) — as a runnable Pi agent.
+A starting point for your research agent, inspired by Anthropic's orchestrator-worker multi-agent architecture.
 
-A **lead researcher** (Opus) analyzes a question, decomposes it into independent slices, and dispatches **research subagents** (Sonnet) that search the web in parallel. The lead synthesizes their findings, then a **citation agent** attaches precise sources before the answer is returned. It follows the same recipe layout as the `pi-claude-recipe` and `nextplay-recipe` examples.
+## Quickstart
 
-## What This Is
-
-An Introspection recipe is a package of runtime behavior. This repository contains:
-
-- `.introspection/multi-agent-research-agent.yaml`: the GitOps manifest Introspection discovers.
-- `SYSTEM.md`: the shared research-agent foundation (identity + operating principles) inherited by the lead.
-- `agents/agent.yaml`: the default runnable agent — the **lead researcher** (orchestrator).
-- `agents/research.yaml`: the parallel **research worker** (agent name `research`) the lead spawns.
-- `agents/citations.yaml`: the **citation agent** that runs the final attribution pass.
-- `skills/research-process/`: the lead's end-to-end workflow (assess → plan → delegate → synthesize → cite).
-- `extensions/`: the web tools (`WebSearch`, `WebFetch`) and the `todo_write` planning tool.
-
-When you create a runtime from this repo, Introspection reads the manifest, pins the selected git commit, and launches the default agent (`agent`, the lead researcher).
-
-## How It Maps to the Article
-
-| Article concept | Where it lives here |
-|---|---|
-| Orchestrator-worker architecture | `agents/agent.yaml` (lead) + `agents/research.yaml` (workers) |
-| Lead agent: decompose, scale effort, delegate | `agents/agent.yaml` + `skills/research-process/SKILL.md` |
-| Subagents search 3+ tools in parallel; OODA loop | `agents/research.yaml` |
-| Lead spawns subagents in parallel, not serially (up to 6 concurrent) | delegation guidance in the lead prompt + skill |
-| Effort scaling (1 / 2-4 / 10+ subagents) | the scaling table in `skills/research-process/SKILL.md` |
-| CitationAgent (final attribution pass) | `agents/citations.yaml` |
-| Broad-to-narrow search, source-quality heuristics | `SYSTEM.md` operating principles |
-| Web search + retrieval tools | `extensions/web-tools.ts` (`WebSearch` via Parallel AI, `WebFetch` via native `fetch()`) |
-| Plan as a controllable scratchpad | `todo_write` in `extensions/research-tools.ts` |
-
-Model assignment follows the article: **Opus** lead, **Sonnet** subagents. Pi's tool names are used throughout (`WebSearch`, `WebFetch`, `read`, `write`, `todo_write`). The lead's `subagents` list (`research`, `citations`) is what makes those agents spawnable; the runtime validates each name against an agent in `agents/`, auto-adds the `agent` tool to the lead, and the lead starts each child with `name` + `task`.
-
-## Repository Layout
-
-```text
-.introspection/
-  multi-agent-research-agent.yaml
-README.md
-SYSTEM.md
-package.json
-agents/
-  README.md
-  agent.yaml              # lead researcher (orchestrator)
-  research.yaml           # parallel research worker
-  citations.yaml          # final citation pass
-skills/
-  README.md
-  research-process/
-    SKILL.md
-extensions/
-  README.md
-  web-tools.ts            # WebSearch + WebFetch
-  research-tools.ts       # todo_write (planning)
-```
-
-## Configure
-
-`WebSearch` is backed by the [Parallel AI Search API](https://docs.parallel.ai) and needs an API key in the recipe environment:
-
-| Env var | Purpose | Default |
-|---|---|---|
-| `PARALLEL_API_KEY` | API key (required for WebSearch) | — |
-| `PARALLEL_SEARCH_PROCESSOR` | processor tier: `base` or `pro` | `base` |
-| `PARALLEL_SEARCH_MAX_RESULTS` | max results per search | `5` |
-
-Without `PARALLEL_API_KEY`, `WebSearch` returns an actionable error (research depends on it). `WebFetch` needs no key. To swap in a different search backend, change the `WebSearch` `execute` body in `extensions/web-tools.ts` — the tool name and prompt stay the same.
-
-## Customize
-
-Edit these files first:
-
-- `agents/agent.yaml` — the lead's delegation strategy, effort scaling, and model.
-- `skills/research-process/SKILL.md` — the decomposition/synthesis workflow and brief template.
-- `agents/research.yaml` — how individual workers search and what they return.
-- `agents/citations.yaml` — citation style and strictness.
-- `SYSTEM.md` — shared principles for every agent in the system.
-
-## Validating Locally
-
-CI validates every push with [`pi-recipes-action`](https://github.com/introspection-org/pi-recipes-action). To run the same check before each commit, enable the bundled pre-commit hook once after cloning:
+Install Pi and the Recipes extension once per machine:
 
 ```bash
-git config core.hooksPath .githooks   # or: npm install
+pi install npm:@introspection-ai/recipes
 ```
 
-Or run the check directly at any time:
+Then clone this template and run it:
 
 ```bash
-npx -y -p @introspection-ai/pi-recipes@latest recipes check . --profile ci
+git clone https://github.com/introspection-recipes/pi-multi-agent-research
+pi --recipe ./pi-multi-agent-research
 ```
+
+## Make it yours
+
+This is a directory, so change it like any other source. Nothing here is
+generated and nothing is hidden.
+
+| Path | What it is |
+| --- | --- |
+| `SYSTEM.md` | instructions every agent in the package starts from |
+| `agents/agent.yaml` | the lead researcher, and the agent you run |
+| `agents/research.yaml` | parallel research subagents |
+| `agents/citations.yaml` | attaches sources before the answer returns |
+| `skills/research-process/` | the research method, as a skill |
+
+Check your changes before you commit them:
+
+```bash
+introspection check
+```
+
+## Docs
+
+The format, the agent file, MCP policy and judges are documented at
+[pi.recipes/docs](https://pi.recipes/docs).
