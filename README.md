@@ -21,7 +21,6 @@ export PARALLEL_API_KEY=your-key
 Validate the recipe and start a fresh local Pi session:
 
 ```bash
-introspection check
 introspection local --runtime multi-agent-research-agent
 ```
 
@@ -41,7 +40,7 @@ Local Pi → Development → Staging → Production → Learn and repeat
 
 ### 1. Change and prove it locally
 
-Customize `SYSTEM.md`, the definitions under `agents/`, the web and orchestration tools under `extensions/`, or `skills/research-process/SKILL.md`. Repeat `introspection check` and the comparison prompt above in fresh sessions. Check simple fact finding as well as multi-part research, and verify both source quality and citation coverage.
+Customize `SYSTEM.md`, the definitions under `agents/`, the web and orchestration tools under `extensions/`, or `skills/research-process/SKILL.md`. Repeat the comparison prompt above in fresh sessions. Check simple fact finding as well as multi-part research, and verify both source quality and citation coverage.
 
 ### 2. Create the runtime and test development
 
