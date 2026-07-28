@@ -49,27 +49,15 @@ Development requires the recipe's first runtime. Commit the locally proven recip
 1. In the Introspection app, open your organization's **Integrations** page and grant the Introspection GitHub App access to the repository.
 2. Open the target project, go to **Runtimes**, and select **New runtime**.
 3. Choose the repository and the runtime in `.introspection/multi-agent-research-agent.yaml`, confirm that its recipe path is `.`, and create the first version from `main`.
-4. Configure the required `PARALLEL_API_KEY` variable bindings described below. The research system has no web source without them, and bindings are environment-specific.
+4. Configure the required Development `PARALLEL_API_KEY` variable described below. The research system has no web source without it.
 5. In **Versions**, confirm that the immutable version's recipe commit matches the `main` commit you intended to deploy.
-
-Sign in to the CLI once before connecting local changes:
-
-```bash
-introspection login
-```
 
 #### Connect the Development Parallel binding
 
-The extensions read `PARALLEL_API_KEY` from the runtime sandbox, so the Development lane needs a variable binding before the agent can search:
-
-1. In the Introspection app, open **Runtimes**, select `multi-agent-research-agent`, and open **Bindings**.
-2. In the **Variables** section, create a variable named `PARALLEL_API_KEY` and paste your Parallel API key as its value.
-3. Scope it to the `multi-agent-research-agent` runtime group and the **Development** environment, then save it. Confirm that the resulting row is labeled as a variable for Development.
-4. Before testing a pull-request candidate or production, create separate `PARALLEL_API_KEY` variable bindings scoped to **Staging** and **Production**. A Development binding does not carry into either lane.
-
-You can create the Development binding from the CLI instead. `--from-env` reads the value without placing it in the command arguments:
+Create the Development-scoped variable, then connect the local recipe:
 
 ```bash
+introspection login
 export PARALLEL_API_KEY=your-key
 introspection bindings variables create \
   --name PARALLEL_API_KEY \
@@ -77,15 +65,10 @@ introspection bindings variables create \
   --runtime-group multi-agent-research-agent \
   --environment development \
   --query name
-```
-
-Variable bindings are readable inside the task sandbox, so use a dedicated, revocable Parallel key. See the [bindings documentation](https://docs.introspection.dev/platform/bindings) for scoping and security details.
-
-With the binding saved, exercise uncommitted changes through the cloud development path:
-
-```bash
 introspection dev --runtime multi-agent-research-agent
 ```
+
+Use a dedicated, revocable Parallel key because variable bindings are readable inside the task sandbox. See the [bindings documentation](https://docs.introspection.dev/platform/bindings) for other environments and scoping options.
 
 Leave the command running, open the development chat URL it prints, and repeat the release-notes comparison. Saved recipe changes are picked up without a commit or push. The development task resolves the Development-scoped `PARALLEL_API_KEY` variable you created above; `introspection dev` does not read or upload the key exported for a local Pi session. Stopping the command removes the local overlay and does not deploy a version.
 
