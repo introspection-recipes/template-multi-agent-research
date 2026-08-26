@@ -8,10 +8,8 @@
   "scripts": {
     "prepare": "git config core.hooksPath .githooks || true"
   },
-  "peerDependencies": {
-    "@earendil-works/pi-agent-core": "*",
-    "@earendil-works/pi-ai": "*",
-    "@earendil-works/pi-coding-agent": "*"
+  "dependencies": {
+    "@introspection-ai/recipes": "^0.21.0"
   },
   "pi": {
     "agents": [

@@ -14,9 +14,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-
-      - name: Validate recipe
-        run: npx -y -p @introspection-ai/cli@0.32.0 introspection check --work-dir . --output table --non-interactive
+      - uses: introspection-org/recipes-action@v0
