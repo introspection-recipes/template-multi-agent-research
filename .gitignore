@@ -23,3 +23,7 @@ pnpm-debug.log*
 # OS cruft
 .DS_Store
 **/._*
+
+# Secrets and local state. `introspection dev` stages with `git add -A`.
+.env.*
+.introspection/local.json
